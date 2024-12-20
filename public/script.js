@@ -1,5 +1,9 @@
-// Connect to WebSocket server
-const socket = new WebSocket('ws://localhost:3000');
+// Determine WebSocket URL based on the environment
+const socketUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+  ? 'ws://localhost:10000'  // Local development URL
+  : 'wss://chatbox-nj7j.onrender.com';  // Production URL
+
+const socket = new WebSocket(socketUrl);
 
 // DOM elements
 const messageInput = document.getElementById('messageInput');
