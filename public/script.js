@@ -32,26 +32,31 @@ socket.onmessage = (event) => {
 
   // Handle typing status messages
   else if (data.type === 'typing') {
-    if (data.user) {
-      showTypingIndicator(data.user); // Only show if there is a user
+    if (data.user && data.user !== '') {
+      showTypingIndicator(data.user); // Show typing indicator if user is typing
     } else {
       typingIndicator.textContent = ''; // Clear typing indicator when empty
     }
   }
 };
 
-
 // Function to append a message to the chat box with timestamp
 function appendMessageToChat(message, time) {
+  // Check if the message or time is undefined or null
+  if (!message || !time) {
+    console.error('Invalid message data:', message, time);
+    return;
+  }
+
   const messageDiv = document.createElement('div');
   const timeElement = `<span style="font-size: 12px; color: #888; margin-left: 10px;">${time}</span>`;
   messageDiv.innerHTML = `${message} ${timeElement}`;
 
   // Append the message div to the chat box
-  document.getElementById('chatBox').appendChild(messageDiv);
+  chatBox.appendChild(messageDiv);
 
   // Scroll chat box to the bottom smoothly
-  document.getElementById('chatBox').scrollTo({ top: document.getElementById('chatBox').scrollHeight, behavior: 'smooth' });
+  chatBox.scrollTo({ top: chatBox.scrollHeight, behavior: 'smooth' });
 }
 
 // Function to send a message when user clicks the send button
