@@ -21,18 +21,25 @@ socket.onopen = () => {
 };
 
 // Handle incoming WebSocket messages
+// Handle incoming WebSocket messages
 socket.onmessage = (event) => {
   const data = JSON.parse(event.data);
 
-  // If the message is a chat message, append it to the chat
+  // Handle chat messages
   if (data.type === 'chat') {
     appendMessageToChat(data.message, data.time);
   }
-  // If the message is a typing status update, show/hide typing indicator
+
+  // Handle typing status messages
   else if (data.type === 'typing') {
-    showTypingIndicator(data.user);
+    if (data.user) {
+      showTypingIndicator(data.user); // Only show if there is a user
+    } else {
+      typingIndicator.textContent = ''; // Clear typing indicator when empty
+    }
   }
 };
+
 
 // Function to append a message to the chat box with timestamp
 function appendMessageToChat(message, time) {
@@ -77,12 +84,14 @@ function sendMessage() {
 }
 
 // Function to handle typing indicator when user is typing
+// Update this function to handle typing with user information
 function handleTyping() {
   if (isTyping) return;
 
   isTyping = true;
-  // Notify the server that the user is typing
-  socket.send(JSON.stringify({ type: 'typing', user: 'Someone is typing...' }));
+  // Replace 'someone' with the actual username or identifier if available
+  const username = 'User1'; // Example: You can dynamically fetch this
+  socket.send(JSON.stringify({ type: 'typing', user: username + ' is typing...' }));
 
   // Clear any previous timeout and set a new one
   clearTimeout(typingTimeout);
@@ -90,9 +99,10 @@ function handleTyping() {
   // Stop typing indicator after 3 seconds of inactivity
   typingTimeout = setTimeout(() => {
     isTyping = false;
-    socket.send(JSON.stringify({ type: 'typing', user: '' }));
+    socket.send(JSON.stringify({ type: 'typing', user: '' })); // Send empty string when typing stops
   }, 3000);
 }
+
 
 // Function to show the typing indicator
 function showTypingIndicator(user) {
