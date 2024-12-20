@@ -1,6 +1,6 @@
 // Determine WebSocket URL based on the environment
 const socketUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-  ? 'ws://localhost:10000'  // Local development URL
+  ? 'ws://localhost:3000'  // Local development URL
   : 'wss://chatbox-nj7j.onrender.com';  // Production URL
 
 const socket = new WebSocket(socketUrl);
@@ -28,8 +28,8 @@ socket.onmessage = (event) => {
   if (data && data.type) {
     if (data.type === 'chat') {
       // Check if message and time are present before calling appendMessageToChat
-      if (data.message && data.time) {
-        appendMessageToChat(data.message, data.time);
+      if (data.message && data.timestamp) {
+        appendMessageToChat(data.message, data.timestamp);
       } else {
         console.error('Invalid message data:', data);  // Log invalid data
       }
@@ -84,7 +84,7 @@ function sendMessage() {
   chatBox.appendChild(messageElement);
 
   // Send message via WebSocket
-  socket.send(JSON.stringify({ type: 'chat', message: messageText, time: messageTime }));
+  socket.send(JSON.stringify({ type: 'chat', message: messageText, timestamp: messageTime }));
 
   // Scroll to the bottom
   chatBox.scrollTop = chatBox.scrollHeight;
@@ -95,7 +95,6 @@ function sendMessage() {
 }
 
 // Function to handle typing indicator when user is typing
-// Update this function to handle typing with user information
 function handleTyping() {
   if (isTyping) return;
 
@@ -113,7 +112,6 @@ function handleTyping() {
     socket.send(JSON.stringify({ type: 'typing', user: '' })); // Send empty string when typing stops
   }, 3000);
 }
-
 
 // Function to show the typing indicator
 function showTypingIndicator(user) {
@@ -138,22 +136,3 @@ messageInput.addEventListener('keydown', (event) => {
     sendMessage(); // Trigger send message function
   }
 });
-
-// Optional: Receive a message function to display incoming messages
-function receiveMessage(receivedText) {
-  const messageContainer = document.getElementById("chatBox");
-
-  // Create receiver message element
-  const messageElement = document.createElement("div");
-  messageElement.classList.add("message", "receiver");
-
-  const messageTextElement = document.createElement("div");
-  messageTextElement.classList.add("text");
-  messageTextElement.innerText = receivedText;
-
-  messageElement.appendChild(messageTextElement);
-  messageContainer.appendChild(messageElement);
-
-  // Scroll to the bottom
-  messageContainer.scrollTop = messageContainer.scrollHeight;
-}

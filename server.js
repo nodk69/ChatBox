@@ -17,7 +17,7 @@ const wss = new WebSocket.Server({
   server,
   verifyClient: (info, done) => {
     const origin = info.origin;
-    if (origin === 'http://localhost:10000' || origin === 'https://chatbox-nj7j.onrender.com') {
+    if (origin === 'http://localhost:3000' || origin === 'https://chatbox-nj7j.onrender.com') {
       done(true);
     } else {
       done(false, 401, 'Unauthorized');
@@ -38,27 +38,35 @@ wss.on('connection', (ws) => {
 
   // When a message is received from the client
   ws.on('message', (message) => {
-    // Ensure the message is a string (convert Blob to text if necessary)
-    if (message instanceof Buffer) {
-      message = message.toString(); // Convert Buffer to string
-    }
-
-    console.log('Received message: ' + message);
-
-    // Structure the message with sender info and timestamp
-    const messageData = {
-      type: 'chat',
-      message: message,
-      sender: 'UserName',  // You can dynamically insert the actual user name here
-      timestamp: new Date().toLocaleTimeString(),
-    };
-
-    // Broadcast the message to all connected clients
-    wss.clients.forEach((client) => {
-      if (client !== ws && client.readyState === WebSocket.OPEN) {
-        client.send(JSON.stringify(messageData));
+    try {
+      // Parse the incoming message
+      let parsedMessage = message;
+      if (message instanceof Buffer) {
+        parsedMessage = message.toString();
       }
-    });
+      
+      // Try to parse as JSON if it's a string
+      if (typeof parsedMessage === 'string') {
+        parsedMessage = JSON.parse(parsedMessage);
+      }
+
+      // Create the message data
+      const messageData = {
+        type: 'chat',
+        message: parsedMessage.message || parsedMessage,
+        sender: 'UserName',
+        timestamp: new Date().toLocaleTimeString(),
+      };
+
+      // Broadcast to ALL clients including sender
+      wss.clients.forEach((client) => {
+        if (client.readyState === WebSocket.OPEN) {
+          client.send(JSON.stringify(messageData));
+        }
+      });
+    } catch (error) {
+      console.error('Error processing message:', error);
+    }
   });
 
   // When a user disconnects

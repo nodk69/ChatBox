@@ -5,20 +5,22 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Chat App</title>
   <link rel="stylesheet" href="style.css">
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 </head>
 <body>
 
-    <div id="chatContainer">
-        <div id="chatBox"></div>
-        <div id="typingIndicator"></div>
-        <div id="inputArea">
-          <input id="messageInput" type="text" placeholder="Type a message..." />
-          <button id="sendButton">
-            <i class="fa fa-paper-plane"></i>
-          </button>
-        </div>
-      </div>
-      
+  <!-- Chat Container -->
+  <div id="chatContainer">
+    <div id="chatBox">
+      <!-- Chat messages will be dynamically added here -->
+    </div>
+    <div id="inputArea">
+      <input id="messageInput" type="text" placeholder="Type a message..." />
+      <button id="sendButton">
+        <i class="fas fa-paper-plane"></i>
+      </button>
+    </div>
+  </div>
 
   <script src="script.js"></script>
 </body>
