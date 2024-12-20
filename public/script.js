@@ -21,22 +21,28 @@ socket.onopen = () => {
 };
 
 // Handle incoming WebSocket messages
-// Handle incoming WebSocket messages
 socket.onmessage = (event) => {
   const data = JSON.parse(event.data);
+  console.log('Received data:', data);  // Log data for debugging
 
-  // Handle chat messages
-  if (data.type === 'chat') {
-    appendMessageToChat(data.message, data.time);
-  }
-
-  // Handle typing status messages
-  else if (data.type === 'typing') {
-    if (data.user && data.user !== '') {
-      showTypingIndicator(data.user); // Show typing indicator if user is typing
-    } else {
-      typingIndicator.textContent = ''; // Clear typing indicator when empty
+  if (data && data.type) {
+    if (data.type === 'chat') {
+      // Check if message and time are present before calling appendMessageToChat
+      if (data.message && data.time) {
+        appendMessageToChat(data.message, data.time);
+      } else {
+        console.error('Invalid message data:', data);  // Log invalid data
+      }
+    } else if (data.type === 'typing') {
+      // Handle typing message, check if user is present
+      if (data.user) {
+        showTypingIndicator(data.user);
+      } else {
+        console.error('Invalid typing data:', data);  // Log invalid typing data
+      }
     }
+  } else {
+    console.error('Received invalid data:', data);  // Log unexpected data types
   }
 };
 
@@ -111,10 +117,11 @@ function handleTyping() {
 
 // Function to show the typing indicator
 function showTypingIndicator(user) {
-  if (user) {
-    typingIndicator.textContent = `${user} is typing...`;
+  if (user && user !== "") {
+    // Show the typing indicator (you can use this to show the user's name)
+    typingIndicator.innerText = `${user} is typing...`;
   } else {
-    typingIndicator.textContent = ''; // Clear typing indicator when the user stops typing
+    typingIndicator.innerText = '';  // Clear the typing indicator if no user
   }
 }
 
