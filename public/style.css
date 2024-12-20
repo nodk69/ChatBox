@@ -131,4 +131,26 @@
   #chatBox::-webkit-scrollbar-thumb:hover {
     background-color: #555;
   }
+  .reactions {
+    margin-top: 5px;
+    display: flex;
+    gap: 10px;
+  }
+  
+  .emoji-button {
+    background-color: transparent;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+  }
+  
+  .emoji-button:hover {
+    color: #007bff;
+  }
+  
+  .reaction {
+    margin-left: 5px;
+    font-size: 20px;
+    display: inline-block;
+  }
   

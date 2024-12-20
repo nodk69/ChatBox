@@ -5,8 +5,9 @@ const path = require('path');
 
 // Create an Express app
 const app = express();
-const server = app.listen(3000, () => {
-  console.log('Server is running on http://localhost:3000');
+const PORT = process.env.PORT || 3000;
+const server = app.listen(PORT, () => {
+  console.log(`Server is running on http://localhost:${PORT}`);
 });
 
 // Serve static files from the 'public' folder

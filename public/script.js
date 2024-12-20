@@ -35,11 +35,12 @@ function appendMessageToChat(message, time) {
   const messageDiv = document.createElement('div');
   const timeElement = `<span style="font-size: 12px; color: #888; margin-left: 10px;">${time}</span>`;
   messageDiv.innerHTML = `${message} ${timeElement}`;
-  messageDiv.classList.add('message', 'receiver');
-  chatBox.appendChild(messageDiv);
+
+  // Append the message div to the chat box
+  document.getElementById('chatBox').appendChild(messageDiv);
 
   // Scroll chat box to the bottom smoothly
-  chatBox.scrollTo({ top: chatBox.scrollHeight, behavior: 'smooth' });
+  document.getElementById('chatBox').scrollTo({ top: document.getElementById('chatBox').scrollHeight, behavior: 'smooth' });
 }
 
 // Function to send a message when user clicks the send button
@@ -104,7 +105,7 @@ messageInput.addEventListener('input', handleTyping);
 // Attach event listener for sending message via button
 sendButton.addEventListener('click', sendMessage);
 
-// Handle the 'Enter' key to send a message (removed duplicate)
+// Handle the 'Enter' key to send a message
 messageInput.addEventListener('keydown', (event) => {
   if (event.key === 'Enter') {
     event.preventDefault(); // Prevent form submission (if in a form)
